@@ -70,7 +70,7 @@ export default {
                 ])],
                 xAxis: {
                     type: 'category',
-                    boundaryGap: false,
+                    // boundaryGap: false,
                     axisLabel: {
                         textStyle: {
                             fontSize: '12',
