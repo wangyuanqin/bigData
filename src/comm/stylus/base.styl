@@ -1,0 +1,125 @@
+mainBgColor = rgba(244, 245, 246, 1);
+$content-background-color = rgba(255,255,255,1);
+$font-main-color = #222222;
+$font-color-l1 = #42A5FD;
+$font-color-l2 = #16E5BD
+$font-color-l3 = #00A2FF
+$font-color-l4 = #FF0909
+$font-color-l5 = #5AA55F
+$font-color-l6 = #FF3437
+$font-color-l7 = #FF9100
+$font-color-n1 = #444444
+$font-color-n2 = #888888
+$font-color-n3 = #00A2FF
+$font-color-n4 = #666666
+$font-color-n5 = #999999
+$bg-color-n1 = #F2F5F8
+$bg-color-n2 = #FAFAFA
+$bg-color-n3 = #EDF0F2
+$bg-color-n4 = #F1F1F1
+$color-s1 = #CDEBFF
+$color-s2 = #ECECEC
+$color-s3 = #F5F5F5
+$color-s4 = #F7F7F7
+$color-s5 = #BABABA
+$color-s6 = #96ABC4
+body{
+  background mainBgColor
+  color $font-main-color
+  font-size:0.12rem;
+  // 上下拉动滚动条时卡顿、慢
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+.content{
+  padding-left:0.14rem;
+  padding-right:0.14rem;  
+  box-sizing: border-box;
+  -moz-box-sizing: border-box; /* Firefox */
+  -webkit-box-sizing: border-box; /* Safari */
+}
+.clear{
+  clear:both;
+}
+.tips-icon{
+  width: 0.06rem;
+  height: 0.06rem;
+  background-color: $font-color-n3;
+  box-shadow: 2px 2px $color-s1;
+  border-radius: 50%;  
+}
+// 颜色边框 颜色字体
+opts-btn1($color,$fontSize,$radius,$fontweight)
+  border:1px solid $color;
+  display:flex;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+  border-radius: $radius;
+  >p
+    font-size:$fontSize;
+    color:$color;
+    font-weight:$fontweight;
+  
+
+// 颜色1背景 颜色2字体
+opts-btn2($bgcolor,$color,$fontSize,$radius,$fontweight)
+  background-color: $bgcolor;
+  border-radius: $radius;
+  display:flex;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+  >p
+    font-size:$fontSize;
+    color:$color;
+    font-weight:$fontweight;
+ 
+// 禁止复制、选中文本
+Element {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+// 长时间按住页面出现闪退
+body {
+  -webkit-touch-callout: none;
+}
+// iphone及ipad下输入框默认内阴影
+input,textarea{
+  outline:none;
+  -webkit-appearance: none;
+}
+button{
+  outline:none;
+}
+// ios和android下触摸元素时出现半透明灰色遮罩
+Element{
+  -webkit-tap-highlight-color: rgba(255,255,255,0);
+}
+
+// 动画定义3D启用硬件加速
+Element{
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate(0,0,0);
+}
+// 旋转屏幕时，字体大小调整问题
+html, body, form, fieldset, p, div, h1, h2, h3, h4, h5, h6 {
+  -webkit-text-size-adjust:100%;
+  text-size-adjust: 100%;
+}
+
+// transition 闪屏
+Element{
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility:hidden;
+}
+// 圆角bug  某些android手机圆角失效
+Element{
+  background-clip: padding-box;
+}
+.button-bottom-fixed {
+  position: fixed;
+  display: block;
+  width: 100%;
+  bottom: .18rem;
+}
