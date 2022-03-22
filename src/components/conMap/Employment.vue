@@ -79,7 +79,7 @@ export default {
     },
     watch: {
         CollegeData () {
-            let arrTuNum = this.CollegeData.map(r => r.stuNum || r.jobNum)
+            let arrTuNum = this.CollegeData.map(r => r.jobNum)
             let max = this.CollegeData.length > 0 ? Math.max(...arrTuNum) : 0
             // console.log(this.CollegeData, max)
             let i = 0
@@ -91,7 +91,6 @@ export default {
                 r.Color = this.Color[i]
                 return r
             })
-            console.log(this.data, 'dat')
             this.$nextTick(() => {
                 // 是否滑动
                 let EmployEv = this.$refs.EmploymentIndustry
@@ -101,13 +100,15 @@ export default {
                 }
                 setTimeout(() => {
                     this.data.forEach((r, i) => {
-                        let sum = this.$refs['strong1' + i][0].dataset.value
-                        this.setTime(this.$refs['strong1' + i][0], sum)
-                        if (this.EmploymentIndustryJusge) {
-                            this.setTime(this.$refs['strong1' + i][1], sum)
-                            this.$refs['evI' + i][1].style.width = (r.stuNum || r.jobNum) / max * 100 + '%'
+                        if (this.$refs['strong1' + i]) {
+                            let sum = this.$refs['strong1' + i][0].dataset.value
+                            this.setTime(this.$refs['strong1' + i][0], sum)
+                            if (this.EmploymentIndustryJusge) {
+                                this.setTime(this.$refs['strong1' + i][1], sum)
+                                this.$refs['evI' + i][1].style.width = (r.jobNum) / max * 100 + '%'
+                            }
+                            this.$refs['evI' + i][0].style.width = (r.jobNum) / max * 100 + '%'
                         }
-                        this.$refs['evI' + i][0].style.width = (r.stuNum || r.jobNum) / max * 100 + '%'
                     })
                 }, 300)
             })

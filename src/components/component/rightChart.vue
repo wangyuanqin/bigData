@@ -19,10 +19,7 @@ export default {
     data () {
         return {
             chart: null,
-            dataList: [],
-            dataDateList: [],
             hanNationNumList: [],
-            minorityNationNumList: [],
             contSum: 0,
             option: {
                 tooltip: {
@@ -87,7 +84,7 @@ export default {
                             color: 'rgba(225,225,225,0.3)'
                         }
                     },
-                    data: this.dataDateList
+                    data: ['累计', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
                 },
                 yAxis: [{
                     type: 'value',
@@ -130,7 +127,6 @@ export default {
         }
     },
     created () {
-        this.getList()
     },
     destroyed () {
         this.contSum = 0
@@ -138,7 +134,7 @@ export default {
     mounted: function () {
         // 基于准备好的dom，初始化echarts实例
         this.chart = this.$echarts.init(this.$refs.classChart)
-        this.dataChange()
+        this.initMap()
         // window.addEventListener('resize', this.handleWindowResize)
         window.addEventListener('resize', this.handleWindowResize)
         // this.animationAter()
@@ -147,23 +143,7 @@ export default {
         drawChart () {
             if (!this.chart) return
             // 绘制图表
-            this.option.xAxis.data = this.dataDateList
-            this.option.series[0].data = this.hanNationNumList
-            // this.option.series[1].data = this.minorityNationNumList
             this.chart.setOption(this.option)
-        },
-        initMap () {
-            if (this.dataDateList.length > 0) {
-                this.option.xAxis.data.shift()
-                this.option.xAxis.data.push(this.dataList[this.contSum].dataDate)
-                this.option.series[0].data.shift()
-                this.option.series[1].data.shift()
-                this.option.series[0].data.push(parseFloat(this.dataList[this.contSum].hanNationNum))
-                this.option.series[1].data.push(parseFloat(this.dataList[this.contSum].minorityNationNum))
-                this.chart.setOption(this.option)
-                this.contSum++
-                if (!this.dataList[this.contSum]) this.contSum = 0
-            }
         },
         /**
        * 当窗口缩放时，echart动态调整自身大小
@@ -180,28 +160,19 @@ export default {
                 vm.drawChart()
             })
         },
-        getList () {
+        initMap () {
             let _this = this
             // 助餐服务情况控制器
-            // _this.$http.get('/screenNationStuNumTrend/list').then(res => {
-            //   if (res.code === '40001') {
-            //     _this.dataList = res.content
-            //     res.content.forEach(i => {
-            //       _this.dataDateList.push(i.dataDate)
-            //       _this.hanNationNumList.push(parseFloat(i.hanNationNum))
-            //       _this.minorityNationNumList.push(parseFloat(i.minorityNationNum))
-            //     })
-            //   }
-            // })
-            let arr = [
-                { dataDate: '累计', hanNationNum: 54, minorityNationNum: 52 },]
-            for (let i = 1; i <= 12; i++) {
-                arr.push({ dataDate: i + '月', hanNationNum: i + 12, minorityNationNum: 44 })
-            }
-            arr.forEach(i => {
-                _this.dataDateList.push(i.dataDate)
-                _this.hanNationNumList.push(parseFloat(i.hanNationNum))
-                // _this.minorityNationNumList.push(parseFloat(i.minorityNationNum))
+            _this.$http.get('/Interface/MealSubsidies').then(res => {
+                if (res.success === 0) {
+                    let countNumber = parseFloat(res.data.countNumber.value)
+                    let i = res.data.monthNumber.value[0]
+                    _this.hanNationNumList = [countNumber, i.January, i.February, i.March, i.April, i.May, i.June, i.July, i.August, i.September, i.October, i.November, i.December]
+                    _this.option.series[0].data = _this.hanNationNumList
+                    _this.dataChange()
+                } else {
+                    _this.$message.error(res.msg)
+                }
             })
         }
 
@@ -210,21 +181,9 @@ export default {
         echarts () {
             return 'echarts' + Math.random() * 100000
         },
-        legendList () {
-            let len = []
-            if (this.dataList) {
-                this.dataList.forEach(i => {
-                    len.push(i.name)
-                })
-            }
-            return len
-        }
     },
     // 数据发生变化重新生成echarts
     watch: {
-        dataList (val) {
-            this.dataChange()
-        }
     },
     beforeDestroy () {
         // window.removeEventListener('resize', this.handleWindowResize)

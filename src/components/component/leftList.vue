@@ -17,6 +17,7 @@
         <div class="tableBanner"
              ref="banner">
             <ul class="tableList"
+                v-if="dataList.length"
                 ref="list"
                 :class="{'animate-up': animateUp}">
                 <li v-for="(item,index) in dataList"
@@ -26,6 +27,8 @@
                     <!-- <div>{{item.classHourNum}}</div> -->
                 </li>
             </ul>
+            <p v-else
+               class="noContent">暂无数据</p>
         </div>
     </div>
 </template>
@@ -86,17 +89,24 @@ export default {
         // 教授授课课时
         getList () {
             let _this = this
-            let arr = []
-            for (let i = 0; i < 100; i++) {
-                arr.push({ tchName: `当日XX${i}志愿者在XX时间为XX老人提供Xx服务` })
-            }
-            _this.dataList = arr
-            console.log(this.dataList)
-            //   _this.$http.get('/screenTchTeachingClassHour/list').then(res => {
-            //     if (res.code === '40001') {
-            //       _this.dataList = res.content
-            //     }
-            //   })
+            // let arr = []
+            // for (let i = 0; i < 100; i++) {
+            //     arr.push({ tchName: `当日XX${i}志愿者在XX时间为XX老人提供Xx服务` })
+            // }
+            // _this.dataList = arr
+            _this.$http.get('/Interface/SameDayService').then(res => {
+                if (res.success === 0) {
+                    if (res.data.listSameDay) {
+                        _this.dataList = res.data.listSameDay.value.map(i => {
+                            i.tchName = `${i.jobuserName} ${i.startTime} 为 ${i.userName} 老人 ${i.itemName}`
+                            return i
+                        })
+                    }
+
+                } else {
+                    _this.$message.error(res.msg)
+                }
+            })
         }
     },
     computed: {
@@ -167,6 +177,11 @@ export default {
             transition: all 0.5s ease-in-out
             transform: translateY(-0.4rem)
         }
+    }
+    .noContent {
+        color: #ffffff
+        text-align: center
+        margin: 0.16rem
     }
 }
 </style>

@@ -2,9 +2,9 @@
  * @Author       : wangyuanqin
  * @desc         : 智慧养老大数据服务平台
  * @Date         : 2022-03-19 15:42:17
- * @LastEditTime : 2022-03-21 15:33:58
+ * @LastEditTime : 2022-03-22 17:52:00
  * @LastEditors  : wangyuanqin
- * @FilePath     : \big-data-screen\src\components\old\index.vue
+ * @FilePath     : \bigData\src\components\old\index.vue
 -->
 <template>
     <div class="bigData">
@@ -20,12 +20,12 @@
                         <div class="titleBox">老年人数据统计</div>
                         <div class="bing">
                             <p class="bing-title">
-                                <span>街道:5</span>
-                                <span>社区:10</span>
-                                <span>老人:500</span>
+                                <span>街道:{{oldObj.sites}}</span>
+                                <span>社区:{{oldObj.communitys}}</span>
+                                <span>老人:{{oldObj.users}}</span>
                             </p>
                             <div class="bing-report">
-                                <div class="chartBox">
+                                <div class="reportChart">
                                     <ringChart ref="ringChart"
                                                :dataList="oldList"></ringChart>
                                 </div>
@@ -33,7 +33,8 @@
                         </div>
                         <div class="oldtype">
                             <div class="chartOld">
-                                <topChart ref="topChart" />
+                                <topChart ref="topChart"
+                                          :dataList="tagUserList" />
                             </div>
                         </div>
                     </div>
@@ -48,25 +49,25 @@
                     <div class="top">
                         <div>
                             <img src="~@/../static/images/bigDataImg/centercion01.png">
-                            <div><span v-countRunning="centertop.secondLevelCollegeNum"></span>
+                            <div><span v-countRunning="centertop.userCount"></span>
                                 <p>登记老人数量</p>
                             </div>
                         </div>
                         <div>
                             <img src="~@/../static/images/bigDataImg/centercion02.png">
-                            <div><span v-countRunning="centertop.functionDepNum"></span>
+                            <div><span v-countRunning="centertop.departmentCount"></span>
                                 <p>服务机构数量</p>
                             </div>
                         </div>
                         <div>
                             <img src="~@/../static/images/bigDataImg/centercion03.png">
-                            <div><span v-countRunning="centertop.inSchStuNum"></span>
+                            <div><span v-countRunning="centertop.jobUserCount"></span>
                                 <p>志愿者数量</p>
                             </div>
                         </div>
                         <div>
                             <img src="~@/../static/images/bigDataImg/centercion04.png">
-                            <div><span v-countRunning="centertop.inSchTchNum"></span>
+                            <div><span v-countRunning="centertop.servicerecordCount"></span>
                                 <p>累计服务总人次</p>
                             </div>
                         </div>
@@ -135,7 +136,19 @@ export default {
     },
     data () {
         return {
-            oldList: [],
+            tagUserList: [],
+            oldList: [
+                { name: '60岁以下', value: 0 },
+                { name: '60-69岁', value: 0 },
+                { name: '70-79岁', value: 0 },
+                { name: '80-89岁', value: 0 },
+                { name: '90岁以上', value: 0 },
+            ],
+            oldObj: {
+                sites: 0,
+                communitys: 0,
+                users: 0
+            },
             CollegeData: '',
             time: '', // 定时器
             ico_horn: require('@/../static/images/message-icon.png'),
@@ -144,13 +157,12 @@ export default {
                 { msg: '嘎嘎嘎嘎' }
             ],
             centertop: {
-                secondLevelCollegeNum: 10, // 登记老人数量
-                functionDepNum: 58, // 服务机构数量
-                inSchStuNum: 33, // 志愿者总数
-                inSchTchNum: 24 // 累计服务总人次
+                userCount: 10, // 登记老人数量
+                departmentCount: 58, // 服务机构数量
+                jobUserCount: 33, // 志愿者总数
+                servicerecordCount: 24 // 累计服务总人次
             },
             nowDate: '',//当前日期
-            // message: '2022-03-19 张无忌 志愿者 在内江市区内 为福州新城社区 <span>张三丰</span> 老人提供了<span>扶过马路</span>服务'
         }
     },
     created () { },
@@ -180,20 +192,23 @@ export default {
                 //     this.mesList.splice(0, 1)
                 //     console.log(this.mesList, 'mesList')
                 // }
-                if (i % 1500 === 0) {
-                    this.$refs.leftList.initMap() // 教师授课课时·TOP10
+                if (i % 4500 === 0) {
+                    this.$refs.leftList.initMap() // 当日服务显示
                 }
-                if (i % 1800 === 0) {
-                    this.$refs.topChart.initMap() // 老年人数据统计
-                }
-                if (i % 3000 === 0) {
+                // if (i % 5800 === 0) {
+                //     this.$refs.topChart.initMap() // 老年人数据统计
+                // }
+                if (i % 4800 === 0) {
                     this.$refs.rightChart.initMap() // 助餐服务情况
                 }
-                if (i % 2000 === 0) {
+                if (i % 5000 === 0) {
                     this.$refs.leftChart.initMap() // 服务机构情况
                 }
-                if (i % 2500 === 0) {
-                    this.$refs.ringChart.initMap() // 老年人数据统计
+                // if (i % 5500 === 0) {
+                //     this.$refs.ringChart.initMap() // 老年人数据统计
+                // }
+                if (i % 6000 === 0) {
+                    this.getList()
                 }
             }, 1000)
         },
@@ -213,27 +228,52 @@ export default {
             }, 30) //滚动速度
         },
         getList () {
-            // let _this = this
-            // // 家居服务项目统计
-            // _this.$http.get('/screenCollegeStuNumTotal/list').then(res => {
-            //   if (res.code === '40001') {
-            //     this.CollegeData = res.content
-            //   }
-            // })
-            //老年人数据统计
-            this.oldList = [
-                { name: '60岁以下', value: 10 },
-                { name: '60-69岁', value: 10 },
-                { name: '70-79岁', value: 10 },
-                { name: '80-89岁', value: 10 },
-                { name: '90岁以上', value: 10 },
-            ]
+            let _this = this
             // 家居服务项目统计
-            let arr = []
-            for (let i = 0; i <= 20; i++) {
-                arr.push({ tradeName: `服务项目名称${i}`, jobNum: Math.round(Math.random() * 80 + 20), jobNum2: Math.round(Math.random() * 80 + 20) })
-            }
-            this.CollegeData = arr
+            _this.$http.get('/Interface/ResidentialServices').then(res => {
+                if (res.success === 0) {
+                    let arr = []
+                    let residential = res.data.residential.value
+                    residential.forEach(i => {
+                        arr.push({ tradeName: i.ProjectName, jobNum: parseFloat(i.Count) || 0, jobNum2: parseFloat(i.CountTime) || 0 })
+
+                    })
+                    this.CollegeData = arr
+
+                } else {
+                    _this.$message.error(res.msg)
+                }
+            })
+            //老年人数据统计
+            _this.$http.get('/Interface/UserServices').then(res => {
+                if (res.success === 0) {
+                    let ages = res.data.ages.value[0]
+                    _this.oldObj.sites = res.data.sites.value
+                    _this.oldObj.communitys = res.data.communitys.value
+                    _this.oldObj.users = res.data.users.value
+                    _this.oldList = [
+                        { name: '60岁以下', value: ages.age60Under || 0 },
+                        { name: '60-69岁', value: ages.age60between69 || 0 },
+                        { name: '70-79岁', value: ages.age70between79 || 0 },
+                        { name: '80-89岁', value: ages.age80between89 || 0 },
+                        { name: '90岁以上', value: ages.age90Above || 0 },
+                    ]
+                    _this.tagUserList = res.data.TagUser.value || []
+                } else {
+                    _this.$message.error(res.msg)
+                }
+            })
+            //数据汇总
+            _this.$http.get('/Interface/DataService').then(res => {
+                if (res.success === 0) {
+                    _this.centertop.userCount = parseFloat(res.data.userCount.value) || 0
+                    _this.centertop.jobUserCount = parseFloat(res.data.jobUserCount.value) || 0
+                    _this.centertop.departmentCount = parseFloat(res.data.departmentCount.value) || 0
+                    _this.centertop.servicerecordCount = parseFloat(res.data.servicerecordCount.value) || 0
+                } else {
+                    _this.$message.error(res.msg)
+                }
+            })
         },
 
         currentTime () {
@@ -371,6 +411,10 @@ export default {
                         &-report {
                             width: 100%
                             height: calc(100% - 0.32rem)
+                            .reportChart {
+                                width: 100%
+                                height: 100%
+                            }
                         }
                     }
                     .oldtype {

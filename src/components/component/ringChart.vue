@@ -35,12 +35,8 @@ export default {
         _this.dataChange();
         // _this.$listen("resize", _this.handleWindowResize, "add");//监听window
         // 监听chartdiv变化
-        _this.$erd.listenTo(_this.$refs.classChart, function (element) {
-            // var width = element.offsetWidth;
-            // var height = element.offsetHeight;
-            // console.log("Size: " + width + "x" + height);
-            _this.handleWindowResize();
-        });
+
+        window.addEventListener('resize', this.handleWindowResize)
     },
     methods: {
         drawChart () {
@@ -62,7 +58,7 @@ export default {
                     {
                         name: "访问来源",
                         type: "pie",
-                        radius: ["30%", "88%"],
+                        radius: ["30%", "78%"],
                         itemStyle: {
                             normal: {
                                 borderWidth: 2,
@@ -83,7 +79,7 @@ export default {
                     },
                     {
                         type: "pie",
-                        radius: ["90%", "93%"],
+                        radius: ["80%", "83%"],
                         avoidLabelOverlap: false,
                         legendHoverLink: false,
                         label: {
