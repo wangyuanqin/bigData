@@ -26,11 +26,10 @@ export default {
     },
     data () {
         return {
+            time: null,
             chart: null,
             dataDateList: [],
             hanNationNumList: [],
-            minorityNationNumList: [],
-            contSum: 0,
             option: {
                 title: {
                     show: false,
@@ -140,7 +139,8 @@ export default {
     created () {
     },
     destroyed () {
-        this.contSum = 0
+        clearInterval(this.time)
+        this.time = null
     },
     mounted: function () {
         // 基于准备好的dom，初始化echarts实例
@@ -156,7 +156,6 @@ export default {
             // 绘制图表
             this.option.xAxis.data = this.dataDateList
             this.option.series[0].data = this.hanNationNumList
-            // this.option.series[1].data = this.minorityNationNumList
             this.chart.setOption(this.option)
         },
         /**
@@ -185,15 +184,56 @@ export default {
     watch: {
         dataList (val) {
             let _this = this
+            _this.time = null
+            _this.dataDateList = []
             _this.hanNationNumList = []
-            _this.hanNationNumList = []
-            if (val) {
-                val.forEach(i => {
-                    _this.dataDateList.push(i.TagName)
-                    _this.hanNationNumList.push(i.TagUserCount)
-                });
-                // _this.option.series[0].data = _this.hanNationNumList
-                _this.dataChange()
+            var pageSize = 6//每页条数
+            if (val && val.length > 0) {
+                if (val.length <= pageSize) {
+                    val.forEach(i => {
+                        _this.dataDateList.push(i.TagName)
+                        _this.hanNationNumList.push(i.TagUserCount)
+                    });
+                    _this.dataChange()
+                } else {//超过一页的时候,分多页
+                    let dataArr = [[]]
+                    let numPage = 0
+                    let num = 0
+                    val.forEach((item, index) => {
+                        if (num < pageSize) {
+                            dataArr[numPage].push(item)
+                            num++
+                        } else {
+                            numPage++
+                            num = 0
+                            dataArr.push([])
+                            dataArr[numPage].push(item)
+                            num++
+                        }
+                    })
+                    //首次执行开始
+                    dataArr[0].forEach(i => {
+                        _this.dataDateList.push(i.TagName)
+                        _this.hanNationNumList.push(i.TagUserCount)
+                    });
+                    _this.dataChange()
+                    //首次执行结束
+                    //循环开始
+                    var pageNum = 1//当前页
+                    _this.time = setInterval(() => {
+                        _this.dataDateList = []
+                        _this.hanNationNumList = []
+                        if (pageNum === dataArr.length) pageNum = 0
+                        dataArr[pageNum].forEach(i => {
+                            _this.dataDateList.push(i.TagName)
+                            _this.hanNationNumList.push(i.TagUserCount)
+                        });
+                        pageNum = pageNum + 1
+                        _this.dataChange()
+
+                    }, 5000)
+                    //循环结束
+                }
             }
         }
     },

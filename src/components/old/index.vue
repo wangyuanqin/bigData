@@ -2,7 +2,7 @@
  * @Author       : wangyuanqin
  * @desc         : 智慧养老大数据服务平台
  * @Date         : 2022-03-19 15:42:17
- * @LastEditTime : 2022-03-22 17:52:00
+ * @LastEditTime : 2022-03-23 09:30:59
  * @LastEditors  : wangyuanqin
  * @FilePath     : \bigData\src\components\old\index.vue
 -->
@@ -192,22 +192,22 @@ export default {
                 //     this.mesList.splice(0, 1)
                 //     console.log(this.mesList, 'mesList')
                 // }
-                if (i % 4500 === 0) {
+                if (i % 45000 === 0) {
                     this.$refs.leftList.initMap() // 当日服务显示
                 }
                 // if (i % 5800 === 0) {
                 //     this.$refs.topChart.initMap() // 老年人数据统计
                 // }
-                if (i % 4800 === 0) {
+                if (i % 48000 === 0) {
                     this.$refs.rightChart.initMap() // 助餐服务情况
                 }
-                if (i % 5000 === 0) {
+                if (i % 50000 === 0) {
                     this.$refs.leftChart.initMap() // 服务机构情况
                 }
                 // if (i % 5500 === 0) {
                 //     this.$refs.ringChart.initMap() // 老年人数据统计
                 // }
-                if (i % 6000 === 0) {
+                if (i % 60000 === 0) {
                     this.getList()
                 }
             }, 1000)
