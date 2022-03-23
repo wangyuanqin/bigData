@@ -1,8 +1,8 @@
 <!--
  * @Author       : wangyuanqin
- * @desc         : 智慧养老大数据服务平台
+ * @desc         : 高新区智慧养老大数据服务平台
  * @Date         : 2022-03-19 15:42:17
- * @LastEditTime : 2022-03-23 09:30:59
+ * @LastEditTime : 2022-03-23 17:11:55
  * @LastEditors  : wangyuanqin
  * @FilePath     : \bigData\src\components\old\index.vue
 -->
@@ -73,28 +73,21 @@
                         </div>
                     </div>
                     <div class="top2">
-                        <leftList ref="leftList" />
-                        <!-- <div class="advert-top"
-                             v-if="message">
-                            <div class="ico-horn">
-                                <img :src="ico_horn"
-                                     alt="">
-                            </div>
-                            <div class="marquee-wrap">
-                                <ul class="marquee-box"
-                                    id="marquee-box">
-                                    <li class="marquee-list"
-                                        v-for="i in 3"
-                                        key="i"
-                                        v-html="message"
-                                        :id="i==1?'marquee':''"></li>
-                                </ul>
-                            </div>
-                        </div> -->
+                        <el-row :gutter="20">
+                            <el-col :span="showRight?12:24">
+                                <leftList ref="leftList" />
+                            </el-col>
+                            <el-col v-if="showRight"
+                                    :span="12">
+                                <right-list ref="rightList"
+                                            @showRightFun="showRightFun" />
+                            </el-col>
+                        </el-row>
                     </div>
                     <div class="banner">
-                        <div class="titleBox">地图位置</div>
-
+                        <div class="titleBox">服务现场</div>
+                        <img class="imgBox"
+                             :src="require('@/assets/images/1.jpg')">
                     </div>
                 </div>
                 <div class="dataContent-right">
@@ -119,6 +112,7 @@
 <script>
 /* eslint-disable */
 import leftList from '../component/leftList'
+import rightList from '../component/rightList'
 import topChart from '../component/topChart'
 import rightChart from '../component/rightChart'
 import leftChart from '../component/leftChart'
@@ -132,10 +126,12 @@ export default {
         Employment,
         ringChart,
         leftChart,
-        leftList
+        leftList,
+        rightList
     },
     data () {
         return {
+            showRight: true,
             tagUserList: [],
             oldList: [
                 { name: '60岁以下', value: 0 },
@@ -157,10 +153,10 @@ export default {
                 { msg: '嘎嘎嘎嘎' }
             ],
             centertop: {
-                userCount: 10, // 登记老人数量
-                departmentCount: 58, // 服务机构数量
-                jobUserCount: 33, // 志愿者总数
-                servicerecordCount: 24 // 累计服务总人次
+                userCount: 0, // 登记老人数量
+                departmentCount: 0, // 服务机构数量
+                jobUserCount: 0, // 志愿者总数
+                servicerecordCount: 0 // 累计服务总人次
             },
             nowDate: '',//当前日期
         }
@@ -193,11 +189,11 @@ export default {
                 //     console.log(this.mesList, 'mesList')
                 // }
                 if (i % 45000 === 0) {
-                    this.$refs.leftList.initMap() // 当日服务显示
+                    this.$refs.leftList.getList() // 当日服务显示
                 }
-                // if (i % 5800 === 0) {
-                //     this.$refs.topChart.initMap() // 老年人数据统计
-                // }
+                if (i % 45000 === 0) {
+                    this.$refs.rightList.getList() // 当日正在服务显示
+                }
                 if (i % 48000 === 0) {
                     this.$refs.rightChart.initMap() // 助餐服务情况
                 }
@@ -275,7 +271,9 @@ export default {
                 }
             })
         },
-
+        showRightFun (val) {
+            this.showRight = val
+        },
         currentTime () {
             setInterval(this.formatDate, 500);
         },
@@ -479,6 +477,7 @@ export default {
                 .top2 {
                     margin-top: 0.12rem
                     height: 1.8rem
+                    overflow: hidden
                     .advert-top {
                         position: relative
                         display: flex
@@ -537,6 +536,12 @@ export default {
                     background-repeat: no-repeat
                     background-size: 100% 100%
                     margin-top: 0.16rem
+                    overflow: hidden
+                    .imgBox {
+                        width: 100%
+                        height: calc(100% - 0.4rem)
+                        object-fit: cover
+                    }
                 }
             }
             &-right {

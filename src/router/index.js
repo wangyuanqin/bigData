@@ -7,14 +7,15 @@
  * @FilePath     : \big-data-screen\src\router\index.js
  */
 /* eslint-disable indent */
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 export default new Router({
-  routes: [{
-      path: '/',
-      redirect: 'oldIndex'
+  routes: [
+    {
+      path: "/",
+      redirect: "oldIndex"
     },
     // {
     //   path: '/index/:id/:if',
@@ -34,28 +35,28 @@ export default new Router({
     //   }
     // },
     {
-      path: '/contBIg',
-      name: 'construction',
-      component: resolve => require(['@/components/construction'], resolve),
+      path: "/contBIg",
+      name: "construction",
+      component: resolve => require(["@/components/construction"], resolve),
       meta: {
-        title: '学校建设成果'
+        title: "学校建设成果"
       }
     },
     {
-      path: '/bigData',
-      name: 'bigData',
-      component: resolve => require(['@/components/index'], resolve),
+      path: "/bigData",
+      name: "bigData",
+      component: resolve => require(["@/components/index"], resolve),
       meta: {
-        title: '学校竞争力'
+        title: "学校竞争力"
       }
     },
     {
-      path: '/oldIndex',
-      name: 'oldIndex',
-      component: resolve => require(['@/components/old/index'], resolve),
+      path: "/oldIndex",
+      name: "oldIndex",
+      component: resolve => require(["@/components/old/index"], resolve),
       meta: {
-        title: '智慧养老大数据服务平台'
+        title: "高新区智慧养老大数据服务平台"
       }
     }
   ]
-})
+});

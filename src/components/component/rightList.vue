@@ -97,10 +97,15 @@ export default {
             _this.$http.get('/Interface/SameDayService').then(res => {
                 if (res.success === 0) {
                     if (res.data.listSameDay) {
-                        _this.dataList = res.data.listSameDay.value.map(i => {
-                            i.tchName = `${i.jobuserName} ${i.startTime} 为 ${i.userName} 老人 ${i.itemName}`
-                            return i
-                        }) || []
+                        if (res.data.listNowDAy.value.length > 0) {
+                            _this.$emit('showRightFun', false)
+                        } else {
+                            _this.$emit('showRightFun', true)
+                            _this.dataList = res.data.listNowDAy.value.map(i => {
+                                i.tchName = `${i.jobuserName} ${i.startTime} 正在为 ${i.userName} 老人 ${i.itemName}`
+                                return i
+                            }) || []
+                        }
                     }
 
                 } else {
