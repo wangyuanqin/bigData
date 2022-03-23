@@ -2,7 +2,7 @@
  * @Author       : wangyuanqin
  * @desc         : 高新区智慧养老大数据服务平台
  * @Date         : 2022-03-19 15:42:17
- * @LastEditTime : 2022-03-23 17:11:55
+ * @LastEditTime : 2022-03-23 17:20:27
  * @LastEditors  : wangyuanqin
  * @FilePath     : \bigData\src\components\old\index.vue
 -->

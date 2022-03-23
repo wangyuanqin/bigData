@@ -97,7 +97,7 @@ export default {
             _this.$http.get('/Interface/SameDayService').then(res => {
                 if (res.success === 0) {
                     if (res.data.listSameDay) {
-                        if (res.data.listNowDAy.value.length > 0) {
+                        if (res.data.listNowDAy.value.length === 0) {
                             _this.$emit('showRightFun', false)
                         } else {
                             _this.$emit('showRightFun', true)
